@@ -8,7 +8,7 @@ const User=new mongoose.Schema({
         type: String,
         required:true,
     },
-    last: {
+    lastName: {
         type: String,
         required: false,
     },
