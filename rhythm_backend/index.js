@@ -4,6 +4,9 @@
 
 const express=require("express");//express package import in a const var
 const mongoose = require("mongoose");
+const JwtStrategy = require('passport-jwt').Strategy,
+        ExtractJwt = require('passport-jwt').ExtractJwt;
+    
 require("dotenv").config();
 const app = express(); //app me express ki functionalities add 
 const port= 8000;
@@ -22,8 +25,27 @@ mongoose
             console.log("Error while connecting")
         });
 
-//api: get type: / :return text "Hello world"
+        //setup passport-jwt
+    let opts = {}
+    opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+    opts.secretOrKey = 'ThisIsSecret';
+    passport.use(
+            new JwtStrategy(opts, function(jwt_payload, done) {
+            User.findOne({id: jwt_payload.sub}, function(err, user) {
+                if (err) {
+                    return done(err, false);
+                }
+                if (user) {
+                    return done(null, user);
+                } else {
+                    return done(null, false);
+                    // or you could create a new account
+                }
+            });
+        })
+    );
 
+//api: get type: / :return text "Hello world"
 app.get("/",(req,res)=>{ // /-> route sec arg-> jab ye req ye route pe ayegi to kya krna hai
     //req contains all data for the request
     //res contains all data for the response
