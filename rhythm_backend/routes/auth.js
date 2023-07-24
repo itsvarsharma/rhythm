@@ -2,13 +2,14 @@ const express= require("express");
 const router= express.Router();
 const User = require("../models/User");
 const bcrypt= require("bcrypt");
-const {getToken}=require("../utils/helpers")
+const {getToken}=require("../utils/helpers");
+
 //this POST route will help regiter a user
 router.post("/register", async (req,res)=>{
-    //this code is run when the register api is called a POST request
+    //this code is run when the /register api is called as a POST request
 
-    //my req.body will be of the format { email, password,firstname , lastname,username}
-    const {email,password, firstName,lastName,username}=req.body;
+    //my req.body will be of the format {email, password,firstname , lastname,username}
+    const {email,password, firstName,lastName,username} = req.body;
 
     //does a user with this email already exists? if yes we throw an error
     const user= await User.findOne({email: email});
@@ -24,12 +25,22 @@ router.post("/register", async (req,res)=>{
     //we dont store password as plain text
     //convert it into a hash
     const hashedPassword = bcrypt.hash(password,10);
-    const newUserData={email,password: hashedPassword,firstName,lastName,username};
+    const newUserData={
+        email,
+        password: hashedPassword,
+        firstName,
+        lastName,
+        username
+    };
     const newUser = await User.create(newUserData);
 
+    //create the token to return to the user
     const token = await getToken(email,newUser);
 
+    //return the result to the user
     const userToReturn = {...newUser.toJSON(),token};
     delete userToReturn.password;
-    return res._construct(200).json(userToReturn);
+    return res.status(200).json(userToReturn);
 });
+
+module.exports = router;

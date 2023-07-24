@@ -1,8 +1,9 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 //create a mingoose
 //step1 require mongoose
 //step2 create a mongoose schema
 //step3 create a model
+
 const Song = new mongoose.Schema({
     name:{
         type: String,

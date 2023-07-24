@@ -1,8 +1,9 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 //create a mingoose
 //step1 require mongoose
 //step2 create a mongoose schema
 //step3 create a model
+
 const PlayList = new mongoose.Schema({
     name:{
         type: String,
@@ -10,13 +11,15 @@ const PlayList = new mongoose.Schema({
     },
     thumbnail: {
         type: String,
-        required: false,
+        required: true,
     },
     
     owner: {
         type: mongoose.Types.ObjectId,
         ref: "user",
     },
+
+
     songs: [
         {
             type: mongoose.Types.ObjectId,
@@ -30,6 +33,7 @@ const PlayList = new mongoose.Schema({
         },
     ],
 });
+
 const PlayListModel= mongoose.model("PlayList",PlayList);
 
 module.exports = PlayListModel;
