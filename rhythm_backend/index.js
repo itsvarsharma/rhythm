@@ -8,7 +8,8 @@ const JwtStrategy = require('passport-jwt').Strategy,
         ExtractJwt = require('passport-jwt').ExtractJwt;
 const passport=require("passport");
 const User = require("./models/User");
-const authRoutes=require("./routes/auth");
+const authRoutes= require("./routes/auth");
+const songRoutes= require("./routes/song");
 require("dotenv").config();
 const app = express(); //app me express ki functionalities add 
 const port= 8000;
@@ -62,6 +63,7 @@ app.get("/",(req,res)=>{ // /-> route sec arg-> jab ye req ye route pe ayegi to 
 });
 
 app.use("/auth",authRoutes);
+app.use("/song",songRoutes);
 
 //tell express to run server on 8000
 app.listen(port, ()=>{
