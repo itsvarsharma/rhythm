@@ -43,4 +43,21 @@ router.post("/register", async (req,res)=>{
     return res.status(200).json(userToReturn);
 });
 
+router.post("/login",async (req,res)=>{
+    //get email and password sent by user from req.body
+    const {email,password}=req.body;
+    //check if user with the given email exists. If not, the credentials are invalid
+    const user = await User.findOne({email:email});
+    if(!user){
+        return res.status(403).json({err:"User with this email not exists!"})
+    }
+    //if the user exists, check if the password is correct. If not the credentials are invalid
+    const isPasswordValid= await bcrypt.compare(password,user.password);
+    if(!isPasswordValid){
+        return res.status(403).json({err:"Invalid Password"})
+    }
+    //if the credentials are correct return a token to the user
+    const token = await getToken(user.email,user);
+});
+
 module.exports = router;
